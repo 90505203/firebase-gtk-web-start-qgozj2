@@ -43,5 +43,51 @@ const uiConfig = {
     }
   }
 };
-
+var firebaseConfig = {
+    apiKey: "AIzaSyANmxAOvxfwgUNDR5dI9nlzTdSuzzOSqUU",
+    authDomain: "jelly-20191223.firebaseapp.com",
+    databaseURL: "https://jelly-20191223.firebaseio.com",
+    projectId: "jelly-20191223",
+    storageBucket: "jelly-20191223.appspot.com",
+    messagingSenderId: "1069777403332",
+    appId: "1:1069777403332:web:b8aeb5628af46f4c533891",
+    measurementId: "G-8H07X4582L"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
 // const ui = new firebaseui.auth.AuthUI(firebase.auth());
+// ...
+// Initialize the FirebaseUI widget using Firebase
+const ui = new firebaseui.auth.AuthUI(firebase.auth());
+// ... 
+// At the bottom
+
+// Listen to RSVP button clicks
+startRsvpButton.addEventListener("click",
+ () => {
+      ui.start("#firebaseui-auth-container", uiConfig);
+});
+
+// ...
+// Listen to the current Auth state
+firebase.auth().onAuthStateChanged((user)=> {
+  if (user) {
+    startRsvpButton.textContent = "LOGOUT"
+  }
+  else {
+    startRsvpButton.textContent = "RSVP"
+  }
+});
+
+// ...
+// Called when the user clicks the RSVP button
+startRsvpButton.addEventListener("click",
+ () => {
+    if (firebase.auth().currentUser) {
+      // User is signed in; allows user to sign out
+      firebase.auth().signOut();
+    } else {
+      // No user is signed in; allows user to sign in
+      ui.start("#firebaseui-auth-container", uiConfig);
+    }
+});
